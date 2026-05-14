@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Jimpitan Kampung Premium</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-container hidden">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo"><i class="ti ti-building-community"></i></div>
+      <div class="login-title">Jimpitan Kampung</div>
+      <div class="login-subtitle">Sistem Iuran Warga Digital</div>
+    </div>
+    <form class="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password" required />
+      </div>
+      <button type="submit" class="btn-login">
+        <i class="ti ti-login-2"></i> Masuk Sistem
+      </button>
+    </form>
+    <div class="login-info">
+      <strong style="display:block;margin-bottom:8px"><i class="ti ti-info-circle"></i> Demo Credentials:</strong>
+      <div style="display:flex;justify-content:space-between"><span>Admin</span> <strong>admin / password123</strong></div>
+      <div style="display:flex;justify-content:space-between"><span>Ketua RT</span> <strong>ketua / 123456</strong></div>
+      <div style="display:flex;justify-content:space-between"><span>Bendahara</span> <strong>bendahara / iuran2026</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app hidden" id="appContainer">
+
+  <!-- OVERLAY FOR MOBILE SIDEBAR -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="logo-row">
+        <div class="logo-icon"><i class="ti ti-building-community"></i></div>
+        <div>
+          <div class="logo-name">Jimpitan Kampung</div>
+          <div class="logo-sub">Sistem Iuran Terpadu</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Menu Utama</div>
+      <button class="nav-btn active" id="nav-daftar" onclick="showPage('daftar')">
+        <i class="ti ti-smart-home"></i> Dashboard
+      </button>
+      <button class="nav-btn" id="nav-riwayat" onclick="showPage('riwayat')">
+        <i class="ti ti-history"></i> Riwayat Pembayaran
+      </button>
+      <button class="nav-btn" id="nav-laporan" onclick="showPage('laporan')">
+        <i class="ti ti-chart-pie"></i> Laporan Keuangan
+      </button>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-label">Lainnya</div>
+      <button class="nav-btn" id="nav-pengaturan" onclick="showPage('pengaturan')">
+        <i class="ti ti-settings"></i> Pengaturan
+      </button>
+      <button class="nav-btn" id="nav-tentang" onclick="showPage('tentang')">
+        <i class="ti ti-info-circle"></i> Tentang Sistem
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <select class="bulan-select" id="bulanSelect" onchange="toast('Bulan aktif diubah: '+this.value, '<i class=\'ti ti-calendar-event\'></i>')">
+        <option>Januari 2026</option>
+        <option>Februari 2026</option>
+        <option>Maret 2026</option>
+        <option>April 2026</option>
+        <option selected>Mei 2026</option>
+        <option>Juni 2026</option>
+        <option>Juli 2026</option>
+        <option>Agustus 2026</option>
+        <option>September 2026</option>
+        <option>Oktober 2026</option>
+        <option>November 2026</option>
+        <option>Desember 2026</option>
+      </select>
+      
+      <div class="user-profile">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div class="user-name" id="userName">Admin</div>
+            <div class="user-role" id="userRole">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()"><i class="ti ti-logout"></i> Keluar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="main">
+
+    <!-- PAGE: DAFTAR / DASHBOARD -->
+    <div id="page-daftar">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+          <div>
+            <div class="page-title">Dashboard Iuran</div>
+            <div class="page-sub" id="pageSubtitle">Ringkasan iuran warga bulan ini</div>
+          </div>
+        </div>
+        <div class="topbar-btns">
+          <button class="btn btn-primary" onclick="toast('Fitur scan QR membutuhkan izin kamera', '<i class=\'ti ti-camera\'></i>')">
+            <i class="ti ti-scan"></i> Scan QR
+          </button>
+          <button class="btn btn-ghost" onclick="exportCSV()">
+            <i class="ti ti-file-spreadsheet"></i> Export Excel
+          </button>
+          <button class="btn btn-danger" onclick="resetData()">
+            <i class="ti ti-refresh"></i> Reset Data
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-row" style="margin-top: 1rem">
+        <div class="stat-card s-blue">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="ti ti-home-2"></i></div>
+          </div>
+          <div>
+            <div class="stat-label">Total Rumah</div>
+            <div class="stat-value" id="sTotal">30</div>
+          </div>
+        </div>
+        <div class="stat-card s-green">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="ti ti-circle-check-filled"></i></div>
+          </div>
+          <div>
+            <div class="stat-label">Sudah Bayar</div>
+            <div class="stat-value" id="sSudah">0</div>
+          </div>
+        </div>
+        <div class="stat-card s-amber">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="ti ti-clock-filled"></i></div>
+          </div>
+          <div>
+            <div class="stat-label">Belum Bayar</div>
+            <div class="stat-value" id="sBelum">30</div>
+          </div>
+        </div>
+        <div class="stat-card s-purple">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="ti ti-report-money"></i></div>
+          </div>
+          <div>
+            <div class="stat-label">Total Terkumpul</div>
+            <div class="stat-value" id="sTerkumpul" style="font-size:24px">Rp 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar" style="margin-top: 1.5rem; margin-bottom: 1.5rem">
+        <div class="search-wrap">
+          <i class="ti ti-search"></i>
+          <input type="text" id="searchInput" placeholder="Cari rumah atau nama pemilik..." oninput="renderAll()" />
+        </div>
+        <select class="filter-select" id="filterSel" onchange="renderAll()">
+          <option value="all">Semua Status</option>
+          <option value="paid">Sudah Bayar Lunas</option>
+          <option value="unpaid">Belum Bayar</option>
+        </select>
+        <button class="btn btn-ghost" onclick="toast('Mencetak QR untuk semua rumah...', '<i class=\'ti ti-printer\'></i>')">
+          <i class="ti ti-printer"></i> Cetak QR Massal
+        </button>
+        <div class="progress-pill">
+          <div class="prog-bar"><div class="prog-fill" id="toolbarProg" style="width:0%"></div></div>
+          <span id="toolbarPct">0%</span>
+        </div>
+      </div>
+
+      <div id="cardsGrid" class="cards-grid" style="margin-bottom: 2rem"></div>
+
+      <div class="lists-row">
+        <div class="list-panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-circle-check-filled" style="color:var(--success)"></i> Sudah Bayar</div>
+            <span class="panel-count pc-green" id="countSudah">0</span>
+          </div>
+          <div id="listSudah"></div>
+        </div>
+        <div class="list-panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-clock-filled" style="color:var(--warning)"></i> Belum Bayar</div>
+            <span class="panel-count pc-amber" id="countBelum">30</span>
+          </div>
+          <div id="listBelum"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: RIWAYAT -->
+    <div id="page-riwayat" class="hidden">
+      <div class="topbar" style="margin-bottom:1.5rem">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+          <div>
+            <div class="page-title">Riwayat Pembayaran</div>
+            <div class="page-sub">Data historis semua transaksi masuk</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="exportCSV()"><i class="ti ti-download"></i> Unduh Laporan</button>
+      </div>
+      <div class="riwayat-panel">
+        <table class="riwayat-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Rumah</th>
+              <th>Pemilik</th>
+              <th>Waktu Pembayaran</th>
+              <th>Nominal</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="riwayatBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAGE: LAPORAN -->
+    <div id="page-laporan" class="hidden">
+      <div class="topbar" style="margin-bottom:1.5rem">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+          <div>
+            <div class="page-title">Laporan Keuangan</div>
+            <div class="page-sub" id="bulanLaporan">Mei 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="riwayat-panel" style="max-width: 800px">
+        <div class="laporan-grid" id="laporanGrid"></div>
+        <hr style="border:none;border-top:1px dashed var(--border);margin:2rem 0">
+        <div class="prog-row">
+          <div class="prog-label"><span>Progress Pengumpulan Iuran</span><span id="laporanPct">0%</span></div>
+          <div class="prog-track">
+            <div class="prog-thumb" id="laporanBar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: PENGATURAN -->
+    <div id="page-pengaturan" class="hidden">
+      <div class="topbar" style="margin-bottom:1.5rem">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+          <div class="page-title">Pengaturan Sistem</div>
+        </div>
+      </div>
+      <div class="riwayat-panel" style="max-width:500px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:1rem;color:var(--text)">Besaran Iuran Per Rumah</div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:0.5rem">
+          <div style="position:relative;flex:1">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);font-weight:700">Rp</span>
+            <input type="number" id="nominalInput" value="5000" style="width:100%;padding:14px 16px 14px 44px;border:1px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;font-weight:600" />
+          </div>
+          <button class="btn btn-primary" onclick="saveNominal()">Simpan</button>
+        </div>
+        <p style="font-size:13px;color:var(--text3);line-height:1.5">Nominal ini akan menjadi standar tagihan iuran wajib warga per bulan.</p>
+      </div>
+    </div>
+
+    <!-- PAGE: TENTANG -->
+    <div id="page-tentang" class="hidden">
+      <div class="topbar" style="margin-bottom:1.5rem">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+          <div class="page-title">Tentang Aplikasi</div>
+        </div>
+      </div>
+      <div class="riwayat-panel" style="max-width:500px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.5rem">
+          <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg, var(--primary), #4F46E5);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(37,99,235,0.25)">
+            <i class="ti ti-building-community" style="font-size:32px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-size:20px;font-weight:800;color:var(--text)">Jimpitan Kampung</div>
+            <div style="font-size:14px;color:var(--text3);font-weight:600">Premium Version 3.0</div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:var(--text2);line-height:1.8">
+          Sistem pencatatan iuran warga kampung berbasis teknologi web modern. Memudahkan RT/RW dalam mengelola kas warga, dilengkapi dengan fitur scan QR Code. Data tersimpan di perangkat secara lokal dan aman.
+        </p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST COMPONENT -->
+<div class="toast" id="toastEl"></div>
+
+<!-- SCRIPT -->
+<script src="assets/js/app.js"></script>
+</body>
+</html>

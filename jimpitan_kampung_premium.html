@@ -31,10 +31,16 @@
       </button>
     </form>
     <div class="login-info">
-      <strong style="display:block;margin-bottom:8px"><i class="ti ti-info-circle"></i> Demo Credentials:</strong>
-      <div style="display:flex;justify-content:space-between"><span>Admin</span> <strong>admin / password123</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Ketua RT</span> <strong>ketua / 123456</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Bendahara</span> <strong>bendahara / iuran2026</strong></div>
+      <strong style="display:block;margin-bottom:8px"><i class="ti ti-info-circle"></i> Demo Credentials (Klik untuk Masuk):</strong>
+      <div onclick="autoFillLogin('admin', 'password123')" style="display:flex;justify-content:space-between;cursor:pointer;padding:6px 8px;border-radius:8px;margin-bottom:4px;transition:background 0.2s;" class="demo-cred-row">
+        <span>Admin</span> <strong>admin / password123</strong>
+      </div>
+      <div onclick="autoFillLogin('ketua', '123456')" style="display:flex;justify-content:space-between;cursor:pointer;padding:6px 8px;border-radius:8px;margin-bottom:4px;transition:background 0.2s;" class="demo-cred-row">
+        <span>Ketua RT</span> <strong>ketua / 123456</strong>
+      </div>
+      <div onclick="autoFillLogin('bendahara', 'iuran2026')" style="display:flex;justify-content:space-between;cursor:pointer;padding:6px 8px;border-radius:8px;transition:background 0.2s;" class="demo-cred-row">
+        <span>Bendahara</span> <strong>bendahara / iuran2026</strong>
+      </div>
     </div>
   </div>
 </div>
@@ -316,7 +322,13 @@
 <!-- TOAST COMPONENT -->
 <div class="toast" id="toastEl"></div>
 
-<!-- SCRIPT -->
-<script src="assets/js/app.js"></script>
+<!-- SCRIPTS -->
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/receipt.js"></script>
+<script src="assets/js/voice.js"></script>
+<script src="assets/js/ronda.js"></script>
+<script src="assets/js/payment.js"></script>
+<script src="assets/js/ui.js"></script>
 </body>
 </html>

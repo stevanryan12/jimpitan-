@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,293 +9,925 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    .hide-mobile { display: inline; }
+    .hide-mobile {
+      display: inline;
+    }
+
     @media (max-width: 768px) {
-      .hide-mobile { display: none; }
+      .hide-mobile {
+        display: none;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- MAIN APP -->
-<div class="app" id="appContainer">
+  <!-- MAIN APP -->
+  <div class="app" id="appContainer">
 
-  <!-- OVERLAY FOR MOBILE SIDEBAR -->
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <!-- OVERLAY FOR MOBILE SIDEBAR -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-head">
-      <div class="logo-row">
-        <div class="logo-icon"><i class="ti ti-building-community"></i></div>
-        <div>
-          <div class="logo-name">Jimpitan Kampung</div>
-          <div class="logo-sub">Sistem Iuran Terpadu</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="nav-group">
-      <div class="nav-label">Menu Utama</div>
-      <button class="nav-btn active" id="nav-daftar" onclick="showPage('daftar')">
-        <i class="ti ti-home-heart"></i> Beranda Utama
-      </button>
-      <button class="nav-btn" id="nav-data" onclick="showPage('data')">
-        <i class="ti ti-users-group"></i> Warga & Tagihan
-      </button>
-      <button class="nav-btn" id="nav-riwayat" onclick="showPage('riwayat')">
-        <i class="ti ti-history"></i> Riwayat Pembayaran
-      </button>
-      <button class="nav-btn admin-only" id="nav-laporan" onclick="showPage('laporan')">
-        <i class="ti ti-chart-pie"></i> Laporan Keuangan
-      </button>
-    </div>
-    
-    <div class="nav-group">
-      <div class="nav-label">Lainnya</div>
-      <button class="nav-btn admin-only" id="nav-pengaturan" onclick="showPage('pengaturan')">
-        <i class="ti ti-settings"></i> Pengaturan
-      </button>
-      <button class="nav-btn" id="nav-tentang" onclick="showPage('tentang')">
-        <i class="ti ti-info-circle"></i> Tentang Sistem
-      </button>
-    </div>
-
-    <div class="sidebar-footer">
-      <select class="bulan-select" id="bulanSelect" onchange="toast('Bulan aktif diubah: '+this.value, '<i class=\'ti ti-calendar-event\'></i>')">
-        <option>Januari 2026</option>
-        <option>Februari 2026</option>
-        <option>Maret 2026</option>
-        <option>April 2026</option>
-        <option selected>Mei 2026</option>
-        <option>Juni 2026</option>
-        <option>Juli 2026</option>
-        <option>Agustus 2026</option>
-        <option>September 2026</option>
-        <option>Oktober 2026</option>
-        <option>November 2026</option>
-        <option>Desember 2026</option>
-      </select>
-      
-      <div class="user-profile">
-        <div class="user-info">
-          <div class="user-avatar" id="userAvatar">A</div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <div class="logo-row">
+          <div class="logo-icon"><i class="ti ti-building-community"></i></div>
           <div>
-            <div class="user-name" id="userName">Admin</div>
-            <div class="user-role" id="userRole">Administrator</div>
+            <div class="logo-name">Jimpitan Kampung</div>
+            <div class="logo-sub">Sistem Iuran Terpadu</div>
           </div>
         </div>
-        <!-- Sidebar logout for desktop/mobile redundancy -->
-        <button class="btn-logout" onclick="handleLogout()"><i class="ti ti-logout"></i> Keluar</button>
       </div>
-    </div>
-  </aside>
 
-  <!-- MAIN AREA -->
-  <main class="main">
-
-    <!-- TOPBAR SHARED ACROSS PAGES -->
-    <div class="topbar" style="margin-bottom: 0.5rem">
-      <div class="topbar-left">
-        <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-        <div>
-          <div class="page-title" id="mainTitle">Dashboard Iuran</div>
-          <div class="page-sub" id="mainSubtitle">Ringkasan iuran warga bulan ini</div>
-        </div>
-      </div>
-      <div class="topbar-btns">
-        <div id="dynamicTopBtns" style="display:inline-flex;gap:10px">
-          <button class="btn btn-primary" onclick="toast('Fitur scan QR membutuhkan izin kamera', '<i class=\'ti ti-camera\'></i>')">
-            <i class="ti ti-scan"></i> Scan QR
-          </button>
-          <button class="btn btn-ghost admin-only" onclick="exportCSV()">
-            <i class="ti ti-file-spreadsheet"></i> <span class="hide-mobile">Export Excel</span>
-          </button>
-        </div>
-        <div style="width:1px;height:24px;background:var(--border);margin:0 4px" class="hide-mobile"></div>
-        <button class="btn btn-danger" onclick="handleLogout()" style="background:rgba(239,68,68,0.1);color:#EF4444;border-color:transparent" title="Keluar">
-          <i class="ti ti-logout"></i> <span class="hide-mobile">Keluar</span>
+      <div class="nav-group">
+        <div class="nav-label">Menu Utama</div>
+        <button class="nav-btn active" id="nav-daftar" onclick="showPage('daftar')">
+          <i class="ti ti-home-heart"></i> Beranda Utama
+        </button>
+        <button class="nav-btn" id="nav-data" onclick="showPage('data')">
+          <i class="ti ti-users-group"></i> Warga & Tagihan
+        </button>
+        <button class="nav-btn" id="nav-jadwal" onclick="showPage('jadwal')">
+          <i class="ti ti-calendar-event"></i> Jadwal Pengambilan
+        </button>
+        <button class="nav-btn" id="nav-setoran" onclick="showPage('setoran')">
+          <i class="ti ti-arrow-down-left"></i> Setoran Masuk
+        </button>
+        <button class="nav-btn" id="nav-pengeluaran" onclick="showPage('pengeluaran')">
+          <i class="ti ti-arrow-up-right"></i> Uang Keluar (Pengeluaran)
+        </button>
+        <button class="nav-btn" id="nav-berkala" onclick="showPage('berkala')">
+          <i class="ti ti-users"></i> Rincian Berkala
+        </button>
+        <button class="nav-btn" id="nav-pengeluaran-berkala" onclick="showPage('pengeluaran-berkala')">
+          <i class="ti ti-receipt"></i> Rincian Pengeluaran
+        </button>
+        <button class="nav-btn admin-only" id="nav-laporan" onclick="showPage('laporan')">
+          <i class="ti ti-chart-pie"></i> Laporan Keuangan
         </button>
       </div>
-    </div>
 
-    <!-- PAGE: DAFTAR / DASHBOARD -->
-    <div id="page-daftar">
-    
-      <!-- Kampung Banner -->
-      <div class="kampung-banner" style="margin-top:1rem">
-        <div class="kb-text">
-          <div class="kb-title">Sugeng Rawuh di Jimpitan!</div>
-          <div class="kb-subtitle">Mari bersama wujudkan lingkungan yang guyub, rukun, dan sejahtera.</div>
-        </div>
-        <div class="kb-icon hide-mobile"><i class="ti ti-trees"></i></div>
+      <div class="nav-group">
+        <div class="nav-label">Lainnya</div>
+        <button class="nav-btn admin-only" id="nav-pengaturan" onclick="showPage('pengaturan')">
+          <i class="ti ti-settings"></i> Pengaturan
+        </button>
+        <button class="nav-btn" id="nav-tentang" onclick="showPage('tentang')">
+          <i class="ti ti-info-circle"></i> Tentang Sistem
+        </button>
       </div>
 
-      <div class="stats-row" style="margin-top: 1rem">
-        <div class="stat-card s-blue">
-          <div class="stat-header">
-            <div class="stat-icon"><i class="ti ti-home-2"></i></div>
-          </div>
-          <div>
-            <div class="stat-label">Total Rumah</div>
-            <div class="stat-value" id="sTotal">30</div>
-          </div>
-        </div>
-        <div class="stat-card s-green">
-          <div class="stat-header">
-            <div class="stat-icon"><i class="ti ti-circle-check-filled"></i></div>
-          </div>
-          <div>
-            <div class="stat-label">Sudah Bayar</div>
-            <div class="stat-value" id="sSudah">0</div>
-          </div>
-        </div>
-        <div class="stat-card s-amber">
-          <div class="stat-header">
-            <div class="stat-icon"><i class="ti ti-clock-filled"></i></div>
-          </div>
-          <div>
-            <div class="stat-label">Belum Bayar</div>
-            <div class="stat-value" id="sBelum">30</div>
-          </div>
-        </div>
-        <div class="stat-card s-purple">
-          <div class="stat-header">
-            <div class="stat-icon"><i class="ti ti-report-money"></i></div>
-          </div>
-          <div>
-            <div class="stat-label">Total Terkumpul</div>
-            <div class="stat-value" id="sTerkumpul" style="font-size:24px">Rp 0</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-panel" style="background:#fff;border:1px solid var(--border);border-radius:24px;padding:2rem;box-shadow:var(--shadow-sm);margin-top:1.5rem;">
-        <div class="panel-head" style="margin-bottom:1.5rem">
-          <div class="panel-title" style="font-size:18px;font-weight:800;color:var(--text)"><i class="ti ti-chart-donut"></i> Grafik Proporsi Pembayaran</div>
-        </div>
-        <div style="position:relative;height:320px;width:100%;display:flex;justify-content:center">
-          <canvas id="paymentChart"></canvas>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:2rem" class="admin-only">
-        <button class="btn btn-danger" onclick="resetData()"><i class="ti ti-refresh"></i> Reset Data Bulan Ini</button>
-      </div>
-    </div>
-
-    <!-- PAGE: DATA WARGA & QR -->
-    <div id="page-data" class="hidden">
-      <div class="toolbar" style="margin-bottom: 1.5rem">
-        <div class="search-wrap">
-          <i class="ti ti-search"></i>
-          <input type="text" id="searchInput" placeholder="Cari rumah atau nama pemilik..." oninput="renderAll()" />
-        </div>
-        <select class="filter-select" id="filterSel" onchange="renderAll()">
-          <option value="all">Semua Status</option>
-          <option value="paid">Sudah Bayar Lunas</option>
-          <option value="unpaid">Belum Bayar</option>
+      <div class="sidebar-footer">
+        <select class="bulan-select" id="bulanSelect"
+          onchange="toast('Bulan aktif diubah: '+this.value, '<i class=\'ti ti-calendar-event\'></i>')">
+          <option>Januari 2026</option>
+          <option>Februari 2026</option>
+          <option>Maret 2026</option>
+          <option>April 2026</option>
+          <option selected>Mei 2026</option>
+          <option>Juni 2026</option>
+          <option>Juli 2026</option>
+          <option>Agustus 2026</option>
+          <option>September 2026</option>
+          <option>Oktober 2026</option>
+          <option>November 2026</option>
+          <option>Desember 2026</option>
         </select>
-        <button class="btn btn-ghost admin-only" onclick="toast('Mencetak QR untuk semua rumah...', '<i class=\'ti ti-printer\'></i>')">
-          <i class="ti ti-printer"></i> Cetak QR Massal
-        </button>
-        <div class="progress-pill">
-          <div class="prog-bar"><div class="prog-fill" id="toolbarProg" style="width:0%"></div></div>
-          <span id="toolbarPct">0%</span>
+
+        <div class="user-profile">
+          <div class="user-info">
+            <div class="user-avatar" id="userAvatar">A</div>
+            <div>
+              <div class="user-name" id="userName">Admin</div>
+              <div class="user-role" id="userRole">Administrator</div>
+            </div>
+          </div>
+          <!-- Sidebar logout for desktop/mobile redundancy -->
+          <button class="btn-logout" onclick="handleLogout()"><i class="ti ti-logout"></i> Keluar</button>
         </div>
       </div>
+    </aside>
 
-      <div class="cards-grid-wrapper">
-        <div id="cardsGrid" class="cards-grid"></div>
-      </div>
-    </div>
+    <!-- MAIN AREA -->
+    <main class="main">
 
-    <!-- PAGE: RIWAYAT -->
-    <div id="page-riwayat" class="hidden">
-      <div class="riwayat-panel">
-        <table class="riwayat-table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Rumah</th>
-              <th>Pemilik</th>
-              <th>Waktu Pembayaran</th>
-              <th>Nominal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="riwayatBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- PAGE: LAPORAN -->
-    <div id="page-laporan" class="hidden">
-      <div class="riwayat-panel" style="max-width: 800px">
-        <div class="laporan-grid" id="laporanGrid"></div>
-        <hr style="border:none;border-top:1px dashed var(--border);margin:2rem 0">
-        <div class="prog-row">
-          <div class="prog-label"><span>Progress Pengumpulan Iuran</span><span id="laporanPct">0%</span></div>
-          <div class="prog-track">
-            <div class="prog-thumb" id="laporanBar" style="width:0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: PENGATURAN -->
-    <div id="page-pengaturan" class="hidden">
-      <div class="riwayat-panel" style="max-width:500px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:1rem;color:var(--text)">Besaran Iuran Per Rumah</div>
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:0.5rem">
-          <div style="position:relative;flex:1">
-            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);font-weight:700">Rp</span>
-            <input type="number" id="nominalInput" value="5000" style="width:100%;padding:14px 16px 14px 44px;border:1px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;font-weight:600" />
-          </div>
-          <button class="btn btn-primary" onclick="saveNominal()">Simpan</button>
-        </div>
-        <p style="font-size:13px;color:var(--text3);line-height:1.5">Nominal ini akan menjadi standar tagihan iuran wajib warga per bulan.</p>
-      </div>
-    </div>
-
-    <!-- PAGE: TENTANG -->
-    <div id="page-tentang" class="hidden">
-      <div class="riwayat-panel" style="max-width:500px">
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.5rem">
-          <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg, var(--primary), #4F46E5);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(37,99,235,0.25)">
-            <i class="ti ti-building-community" style="font-size:32px;color:#fff"></i>
-          </div>
+      <!-- TOPBAR SHARED ACROSS PAGES -->
+      <div class="topbar" style="margin-bottom: 0.5rem">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
           <div>
-            <div style="font-size:20px;font-weight:800;color:var(--text)">Jimpitan Kampung</div>
-            <div style="font-size:14px;color:var(--text3);font-weight:600">Premium Version 3.0</div>
+            <div class="page-title" id="mainTitle">Dashboard Iuran</div>
+            <div class="page-sub" id="mainSubtitle">Ringkasan iuran warga bulan ini</div>
           </div>
         </div>
-        <p style="font-size:14px;color:var(--text2);line-height:1.8">
-          Sistem pencatatan iuran warga kampung berbasis teknologi web modern. Memudahkan RT/RW dalam mengelola kas warga, dilengkapi dengan fitur scan QR Code. Data tersimpan di perangkat secara lokal dan aman.
-        </p>
+        <div class="topbar-btns">
+          <div id="dynamicTopBtns" style="display:inline-flex;gap:10px">
+            <button class="btn btn-primary bendahara-only" onclick="openQrScanner()">
+              <i class="ti ti-scan"></i> Scan QR
+            </button>
+            <button class="btn btn-ghost admin-only" onclick="exportCSV()">
+              <i class="ti ti-file-spreadsheet"></i> <span class="hide-mobile">Export Excel</span>
+            </button>
+          </div>
+          <div style="width:1px;height:24px;background:var(--border);margin:0 4px" class="hide-mobile"></div>
+          <button class="btn btn-danger" onclick="handleLogout()"
+            style="background:rgba(239,68,68,0.1);color:#EF4444;border-color:transparent" title="Keluar">
+            <i class="ti ti-logout"></i> <span class="hide-mobile">Keluar</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-  </main>
-</div>
+      <!-- PAGE: DAFTAR / DASHBOARD -->
+      <div id="page-daftar">
 
-<!-- CUSTOM MODAL -->
-<div class="modal-overlay" id="customModal">
-  <div class="modal-content">
-    <div class="modal-icon primary" id="modalIcon"><i class="ti ti-info-circle"></i></div>
-    <h3 class="modal-title" id="modalTitle">Konfirmasi</h3>
-    <p class="modal-desc" id="modalDesc">Apakah Anda yakin?</p>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
-      <button class="btn btn-primary" id="modalBtnConfirm" onclick="if(currentModalConfirm) currentModalConfirm()">Ya, Lanjutkan</button>
+        <!-- Kampung Banner -->
+        <div class="kampung-banner" style="margin-top:1rem">
+          <div class="kb-text">
+            <div class="kb-title">Sugeng Rawuh di Jimpitan!</div>
+            <div class="kb-subtitle">Mari bersama wujudkan lingkungan yang guyub, rukun, dan sejahtera.</div>
+          </div>
+          <div class="kb-icon hide-mobile"><i class="ti ti-trees"></i></div>
+        </div>
+
+        <!-- WIDGET PIKET HARI INI -->
+        <div id="widgetPiketHariIni"
+          style="margin-top: 1rem; background: linear-gradient(135deg, var(--primary-light), var(--bg)); border: 1px solid rgba(47,133,90,0.15); border-radius: 20px; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div
+              style="width: 48px; height: 48px; border-radius: 14px; background: #fff; color: var(--primary); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-size: 22px;">
+              <i class="ti ti-user-check"></i>
+            </div>
+            <div>
+              <div
+                style="font-size: 11px; font-weight: 800; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;">
+                Petugas Piket Keliling Hari Ini (<span id="hariIniLabel">Senin</span>)</div>
+              <div id="petugasHariIniList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">Memuat
+                petugas piket...</div>
+            </div>
+          </div>
+          <div
+            style="font-size: 13px; font-weight: 700; color: var(--primary); background: #fff; padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border); box-shadow: var(--shadow-xs);">
+            <i class="ti ti-walk" style="margin-right: 4px;"></i> Jadwal Ronda Kampung
+          </div>
+        </div>
+
+        <div class="stats-row" style="margin-top: 1rem">
+          <div class="stat-card s-blue">
+            <div class="stat-header">
+              <div class="stat-icon"><i class="ti ti-home-2"></i></div>
+            </div>
+            <div>
+              <div class="stat-label">Total Rumah</div>
+              <div class="stat-value" id="sTotal">30</div>
+            </div>
+          </div>
+          <div class="stat-card s-green">
+            <div class="stat-header">
+              <div class="stat-icon"><i class="ti ti-circle-check-filled"></i></div>
+            </div>
+            <div>
+              <div class="stat-label">Sudah Bayar</div>
+              <div class="stat-value" id="sSudah">0</div>
+            </div>
+          </div>
+          <div class="stat-card s-amber">
+            <div class="stat-header">
+              <div class="stat-icon"><i class="ti ti-clock-filled"></i></div>
+            </div>
+            <div>
+              <div class="stat-label">Belum Bayar</div>
+              <div class="stat-value" id="sBelum">30</div>
+            </div>
+          </div>
+          <div class="stat-card s-purple">
+            <div class="stat-header">
+              <div class="stat-icon"><i class="ti ti-report-money"></i></div>
+            </div>
+            <div>
+              <div class="stat-label">Total Terkumpul</div>
+              <div class="stat-value" id="sTerkumpul" style="font-size:24px">Rp 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-panel"
+          style="background:#fff;border:1px solid var(--border);border-radius:24px;padding:2rem;box-shadow:var(--shadow-sm);margin-top:1.5rem;">
+          <div class="panel-head" style="margin-bottom:1.5rem">
+            <div class="panel-title" style="font-size:18px;font-weight:800;color:var(--text)"><i
+                class="ti ti-chart-donut"></i> Grafik Proporsi Pembayaran</div>
+          </div>
+          <div style="position:relative;height:320px;width:100%;display:flex;justify-content:center">
+            <canvas id="paymentChart"></canvas>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:2rem" class="editor-only">
+          <button class="btn btn-danger" onclick="resetData()"><i class="ti ti-refresh"></i> Reset Data Bulan
+            Ini</button>
+        </div>
+      </div>
+
+      <!-- PAGE: DATA WARGA & QR -->
+      <div id="page-data" class="hidden">
+        <div class="toolbar" style="margin-bottom: 1.5rem">
+          <div class="search-wrap">
+            <i class="ti ti-search"></i>
+            <input type="text" id="searchInput" placeholder="Cari rumah atau nama pemilik..." oninput="renderAll()" />
+          </div>
+          <select class="filter-select" id="filterSel" onchange="renderAll()">
+            <option value="all">Semua Status</option>
+            <option value="paid">Sudah Bayar Lunas</option>
+            <option value="unpaid">Belum Bayar</option>
+          </select>
+          <button class="btn btn-ghost bendahara-only"
+            onclick="toast('Mencetak QR untuk semua rumah...', '<i class=\'ti ti-printer\'></i>')">
+            <i class="ti ti-printer"></i> Cetak QR Massal
+          </button>
+          <button class="btn btn-primary admin-ketua-only" id="btnTambahWarga" onclick="openTambahWargaModal()">
+            <i class="ti ti-user-plus"></i> <span class="hide-mobile">Tambah Warga</span>
+          </button>
+          <div class="progress-pill">
+            <div class="prog-bar">
+              <div class="prog-fill" id="toolbarProg" style="width:0%"></div>
+            </div>
+            <span id="toolbarPct">0%</span>
+          </div>
+        </div>
+
+        <div class="cards-grid-wrapper">
+          <div id="cardsGrid" class="cards-grid"></div>
+        </div>
+
+        <!-- KERANJANG SETORAN (Hanya untuk Warga) -->
+        <div id="keranjangSetoran" class="warga-only hidden"
+          style="position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--surface);padding:1rem 1.5rem;border-radius:100px;box-shadow:var(--shadow-premium);border:1px solid var(--border);display:flex;align-items:center;gap:1rem;z-index:100;">
+          <div style="font-size:14px;font-weight:800;color:var(--text)"><span id="countSetoran"
+              style="color:var(--primary);font-size:16px;">0</span> Rumah Ditandai</div>
+          <button class="btn btn-primary" onclick="kirimSetoran()"
+            style="padding:10px 20px;border-radius:100px;font-size:14px;">
+            <i class="ti ti-send"></i> Kirim Laporan
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE: JADWAL -->
+      <div id="page-jadwal" class="hidden">
+        <div class="toolbar" style="margin-bottom: 1.5rem">
+          <div class="search-wrap">
+            <i class="ti ti-search"></i>
+            <input type="text" id="searchJadwal" placeholder="Cari hari atau nama petugas..."
+              oninput="renderJadwal()" />
+          </div>
+          <button class="btn btn-primary admin-only"
+            onclick="toast('Fitur atur jadwal akan segera hadir', '<i class=\'ti ti-calendar-plus\'></i>')">
+            <i class="ti ti-calendar-plus"></i> Atur Jadwal
+          </button>
+        </div>
+        <div class="cards-grid" id="jadwalGrid"></div>
+      </div>
+
+      <!-- PAGE: SETORAN MASUK (UANG MASUK) -->
+      <div id="page-setoran" class="hidden">
+        <!-- Admin-only verification section -->
+        <div class="editor-only" id="adminSetoranVerificationContainer" style="margin-bottom: 2rem;">
+          <div class="panel-head" style="margin-bottom: 1rem;">
+            <div class="panel-title" style="font-size:18px;font-weight:800;color:var(--text)"><i
+                class="ti ti-receipt"></i> Verifikasi Laporan Setoran</div>
+          </div>
+          <div id="setoranContainer" class="riwayat-panel"
+            style="background:transparent;border:none;box-shadow:none;padding:0;">
+            <!-- Konten setoran di-render lewat JS -->
+          </div>
+        </div>
+
+        <!-- REKAP PER BLOK -->
+        <div id="rekapBlokContainer" style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        </div>
+
+        <!-- Riwayat Uang Masuk table (Public) -->
+        <div class="panel-head" style="margin-bottom: 1rem; margin-top: 2rem;">
+          <div class="panel-title" style="font-size:18px;font-weight:800;color:var(--success)"><i
+              class="ti ti-arrow-down-left"></i> Riwayat Uang Masuk</div>
+        </div>
+        <div class="riwayat-panel">
+          <table class="riwayat-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Rumah</th>
+                <th>Pemilik</th>
+                <th>Piket (Pengambil)</th>
+                <th>Pencatat (Scanner)</th>
+                <th>Waktu Pembayaran</th>
+                <th>Nominal</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="riwayatBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGE: UANG KELUAR (PENGELUARAN) -->
+      <div id="page-pengeluaran" class="hidden">
+        <!-- Admin-only input form and Donut Chart side-by-side or stacked -->
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem;">
+          <div class="bendahara-only" id="adminPengeluaranFormContainer"
+            style="flex: 1; min-width: 320px; max-width: 600px;">
+            <div class="riwayat-panel" style="height: 100%;">
+              <div class="panel-head" style="margin-bottom: 1.5rem;">
+                <div class="panel-title" style="font-size:18px;font-weight:800;"><i class="ti ti-plus"></i> Catat
+                  Pengeluaran Baru</div>
+              </div>
+              <form onsubmit="tambahPengeluaran(event)">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label class="form-label">Keterangan / Tujuan Pengeluaran</label>
+                  <input type="text" id="pengeluaranKet" class="form-input"
+                    placeholder="Contoh: Beli kopi ronda, Bayar listrik pos" required />
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label class="form-label">Kategori Pengeluaran</label>
+                  <select id="pengeluaranKategori" class="form-input" style="font-weight:700;cursor:pointer;">
+                    <option value="Konsumsi Ronda">Konsumsi Ronda</option>
+                    <option value="Alat Keamanan">Alat Keamanan / Pos Ronda</option>
+                    <option value="Operasional RT">Operasional RT & Kebersihan</option>
+                    <option value="Sosial & Donasi">Sosial & Donasi Warga</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                  <label class="form-label">Nominal (Rp)</label>
+                  <input type="number" id="pengeluaranNominal" class="form-input" placeholder="Contoh: 50000"
+                    required />
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">
+                  <i class="ti ti-device-floppy"></i> Simpan Pengeluaran
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="riwayat-panel"
+            style="flex: 1; min-width: 320px; max-width: 500px; display: flex; flex-direction: column; align-items: center;">
+            <div class="panel-head"
+              style="width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+              <div class="panel-title" style="font-size:16px;font-weight:800;"><i class="ti ti-chart-donut"></i>
+                Distribusi Pengeluaran Kas</div>
+            </div>
+            <div style="position:relative;height:220px;width:100%;display:flex;justify-content:center;">
+              <canvas id="expenseChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Public Outflow History -->
+        <div class="panel-head" style="margin-bottom: 1rem; margin-top: 2rem;">
+          <div class="panel-title" style="font-size:18px;font-weight:800;color:var(--danger)"><i
+              class="ti ti-arrow-up-right"></i> Riwayat Uang Keluar (Pengeluaran)</div>
+        </div>
+        <div class="riwayat-panel">
+          <table class="riwayat-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Keterangan</th>
+                <th>Kategori</th>
+                <th>Nominal</th>
+              </tr>
+            </thead>
+            <tbody id="pengeluaranBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGE: LAPORAN -->
+      <div id="page-laporan" class="hidden">
+        <div class="riwayat-panel" style="max-width: 800px">
+          <div class="panel-head"
+            style="margin-bottom: 1.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 1rem;">
+            <div class="panel-title" style="font-size:18px;font-weight:800;"><i class="ti ti-chart-bar"></i>
+              Rekapitulasi Pemasukan</div>
+          </div>
+
+          <div class="laporan-grid" id="laporanGrid"></div>
+
+          <div class="panel-head"
+            style="margin-top: 2.5rem; margin-bottom: 1.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 1rem;">
+            <div class="panel-title" style="font-size:18px;font-weight:800;"><i class="ti ti-calendar-stats"></i> Tren
+              Keuangan</div>
+          </div>
+
+          <div class="laporan-grid" id="laporanBerkalaGrid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="stat-card" style="background:var(--success-light);border-color:rgba(56,161,105,0.2);">
+              <div class="stat-icon" style="background:#fff;color:var(--success)"><i class="ti ti-calendar"></i></div>
+              <div>
+                <div class="stat-label">Minggu Ini</div>
+                <div class="stat-value" id="lapMinggu" style="font-size:20px;">Rp 0</div>
+              </div>
+            </div>
+            <div class="stat-card" style="background:var(--primary-light);border-color:rgba(47,133,90,0.2);">
+              <div class="stat-icon" style="background:#fff;color:var(--primary)"><i class="ti ti-calendar-event"></i>
+              </div>
+              <div>
+                <div class="stat-label">Bulan Ini</div>
+                <div class="stat-value" id="lapBulan" style="font-size:20px;">Rp 0</div>
+              </div>
+            </div>
+            <div class="stat-card" style="background:#FEEBC8;border-color:rgba(221,107,32,0.2);">
+              <div class="stat-icon" style="background:#fff;color:var(--secondary)"><i class="ti ti-calendar-time"></i>
+              </div>
+              <div>
+                <div class="stat-label">Tahun Ini</div>
+                <div class="stat-value" id="lapTahun" style="font-size:20px;">Rp 0</div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:1px dashed var(--border);margin:2rem 0">
+          <div class="prog-row">
+            <div class="prog-label"><span>Progress Pengumpulan Iuran Bulan Ini</span><span id="laporanPct">0%</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-thumb" id="laporanBar" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: RINCIAN BERKALA -->
+      <div id="page-berkala" class="hidden">
+        <div class="riwayat-panel" style="max-width: 800px;">
+          <!-- Segmented Control/Tabs for Period Filter -->
+          <div style="display: flex; gap: 8px; margin-bottom: 1.5rem; background: var(--bg); padding: 6px; border-radius: 14px; border: 1px solid var(--border);">
+            <button class="btn btn-ghost" id="tabPeriod-hari" onclick="setPeriodFilter('hari')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Hari Ini</button>
+            <button class="btn btn-ghost" id="tabPeriod-bulan" onclick="setPeriodFilter('bulan')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Bulan Ini</button>
+            <button class="btn btn-ghost" id="tabPeriod-tahun" onclick="setPeriodFilter('tahun')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Tahun Ini</button>
+          </div>
+
+          <!-- Date Selector (Only shown for 'Hari Ini') -->
+          <div id="periodDateWrap" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--bg); padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); transition: all 0.2s;">
+            <span style="font-size: 14px; font-weight: 800; color: var(--text2); display: flex; align-items: center; gap: 8px;">
+              <i class="ti ti-calendar-event" style="color: var(--primary); font-size: 20px;"></i> Pilih Tanggal Pantau:
+            </span>
+            <input type="date" id="periodDatePicker" onchange="renderPeriodReport()" style="padding: 10px 16px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-weight: 800; color: var(--text); background: #fff; cursor: pointer; box-shadow: var(--shadow-sm); outline: none; border-color: rgba(47,133,90,0.2);" />
+          </div>
+
+          <!-- Two Column Layout for lists -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <!-- Column 1: Sudah Bayar -->
+            <div style="background: rgba(16, 185, 129, 0.04); padding: 1.25rem; border-radius: 20px; border: 1.5px solid rgba(16, 185, 129, 0.15);">
+              <div style="font-size: 15px; font-weight: 800; color: var(--success); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="ti ti-circle-check-filled"></i> Sudah Bayar</span>
+                <span class="badge badge-paid" id="periodPaidCount" style="font-size: 12px; padding: 4px 10px;">0 Rumah</span>
+              </div>
+              <div id="periodPaidList" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; padding-right: 4px;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Column 2: Belum Bayar (Bukti) -->
+            <div style="background: rgba(239, 68, 68, 0.04); padding: 1.25rem; border-radius: 20px; border: 1.5px solid rgba(239, 68, 68, 0.15);">
+              <div style="font-size: 15px; font-weight: 800; color: #EF4444; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="ti ti-circle-x-filled"></i> Belum Bayar (Bukti)</span>
+                <span class="badge" id="periodUnpaidCount" style="font-size: 12px; padding: 4px 10px; background: rgba(239, 68, 68, 0.15); color: #EF4444; font-weight: 800;">0 Rumah</span>
+              </div>
+              <div id="periodUnpaidList" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; padding-right: 4px;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: RINCIAN PENGELUARAN BERKALA -->
+      <div id="page-pengeluaran-berkala" class="hidden">
+        <div class="riwayat-panel" style="max-width: 800px;">
+          <!-- Segmented Control/Tabs for Period Filter -->
+          <div style="display: flex; gap: 8px; margin-bottom: 1.5rem; background: var(--bg); padding: 6px; border-radius: 14px; border: 1px solid var(--border);">
+            <button class="btn btn-ghost" id="tabExpPeriod-hari" onclick="setPeriodExpenseFilter('hari')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Hari Ini</button>
+            <button class="btn btn-ghost" id="tabExpPeriod-bulan" onclick="setPeriodExpenseFilter('bulan')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Bulan Ini</button>
+            <button class="btn btn-ghost" id="tabExpPeriod-tahun" onclick="setPeriodExpenseFilter('tahun')" style="flex: 1; border-radius: 10px; font-weight: 700; font-size: 14px; padding: 10px 0; border: none; transition: all 0.2s;">Tahun Ini</button>
+          </div>
+
+          <!-- Date Selector (Only shown for 'Hari Ini') -->
+          <div id="expensePeriodDateWrap" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--bg); padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); transition: all 0.2s;">
+            <span style="font-size: 14px; font-weight: 800; color: var(--text2); display: flex; align-items: center; gap: 8px;">
+              <i class="ti ti-calendar-event" style="color: var(--danger); font-size: 20px;"></i> Pilih Tanggal Pantau Pengeluaran:
+            </span>
+            <input type="date" id="expensePeriodDatePicker" onchange="renderPeriodExpenseReport()" style="padding: 10px 16px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-weight: 800; color: var(--text); background: #fff; cursor: pointer; box-shadow: var(--shadow-sm); outline: none; border-color: rgba(229,62,62,0.2);" />
+          </div>
+
+          <!-- Total Expense Summary Card for Period -->
+          <div style="background: rgba(229, 62, 62, 0.04); border: 1.5px solid rgba(229, 62, 62, 0.15); padding: 1.5rem; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="font-size: 12px; font-weight: 800; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em;">Total Pengeluaran Periode Ini</div>
+              <div id="periodExpenseTotalValue" style="font-size: 32px; font-weight: 900; color: var(--danger); margin-top: 4px;">Rp 0</div>
+            </div>
+            <div id="periodExpenseCount" class="badge" style="background: rgba(229, 62, 62, 0.15); color: var(--danger); font-weight: 800; font-size: 13px; padding: 6px 14px; border-radius: 100px;">0 Transaksi</div>
+          </div>
+
+          <!-- Expenditures List -->
+          <div id="periodExpenseList" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: PENGATURAN -->
+      <div id="page-pengaturan" class="hidden">
+        <div class="riwayat-panel" style="max-width:500px">
+          <div style="font-size:15px;font-weight:800;margin-bottom:1rem;color:var(--text)">Besaran Iuran Per Rumah</div>
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:0.5rem">
+            <div style="position:relative;flex:1">
+              <span
+                style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);font-weight:700">Rp</span>
+              <input type="number" id="nominalInput" value="5000"
+                style="width:100%;padding:14px 16px 14px 44px;border:1px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;font-weight:600" />
+            </div>
+            <button class="btn btn-primary bendahara-only" onclick="saveNominal()">Simpan</button>
+          </div>
+          <p style="font-size:13px;color:var(--text3);line-height:1.5">Nominal ini akan menjadi standar tagihan iuran
+            wajib warga per bulan.</p>
+        </div>
+      </div>
+
+      <!-- PAGE: TENTANG -->
+      <div id="page-tentang" class="hidden">
+        <div class="riwayat-panel" style="max-width:500px">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.5rem">
+            <div
+              style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg, var(--primary), #4F46E5);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(37,99,235,0.25)">
+              <i class="ti ti-building-community" style="font-size:32px;color:#fff"></i>
+            </div>
+            <div>
+              <div style="font-size:20px;font-weight:800;color:var(--text)">Jimpitan Kampung</div>
+              <div style="font-size:14px;color:var(--text3);font-weight:600">Premium Version 3.0</div>
+            </div>
+          </div>
+          <p style="font-size:14px;color:var(--text2);line-height:1.8">
+            Sistem pencatatan iuran warga kampung berbasis teknologi web modern. Memudahkan RT/RW dalam mengelola kas
+            warga, dilengkapi dengan fitur scan QR Code. Data tersimpan di perangkat secara lokal dan aman.
+          </p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- CUSTOM MODAL -->
+  <div class="modal-overlay" id="customModal">
+    <div class="modal-content">
+      <div class="modal-icon primary" id="modalIcon"><i class="ti ti-info-circle"></i></div>
+      <h3 class="modal-title" id="modalTitle">Konfirmasi</h3>
+      <p class="modal-desc" id="modalDesc">Apakah Anda yakin?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+        <button class="btn btn-primary" id="modalBtnConfirm" onclick="if(currentModalConfirm) currentModalConfirm()">Ya,
+          Lanjutkan</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- TOAST COMPONENT -->
-<div class="toast" id="toastEl"></div>
+  <!-- QR SCANNER SIMULATOR MODAL -->
+  <div class="modal-overlay" id="qrScannerModal">
+    <div class="modal-content" style="max-width: 480px; text-align: left; padding: 2rem 1.5rem; border-radius: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3
+          style="font-size: 20px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-scan" style="color: var(--primary); font-size: 24px;"></i> QR Code Scanner Simulator
+        </h3>
+        <button onclick="closeQrScanner()"
+          style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3);"><i
+            class="ti ti-x"></i></button>
+      </div>
 
-<!-- SCRIPT -->
-<script src="assets/js/app.js"></script>
+      <!-- Animated Scanner Viewport -->
+      <div
+        style="position: relative; width: 100%; height: 200px; background: #000; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <!-- Scanning lines and viewfinder -->
+        <div
+          style="position: absolute; border: 2px solid var(--primary); width: 140px; height: 140px; border-radius: 12px; box-shadow: 0 0 15px var(--primary);">
+        </div>
+        <div
+          style="position: absolute; width: 100%; height: 2px; background: rgba(56, 161, 105, 0.8); box-shadow: 0 0 10px #38A169; animation: scanLine 2s linear infinite;">
+        </div>
+        <div
+          style="color: #fff; font-size: 13px; font-weight: 700; z-index: 10; position: absolute; bottom: 12px; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 100px;">
+          <i class="ti ti-loader animate-spin" style="margin-right: 6px;"></i> Menunggu QR di depan kamera...
+        </div>
+      </div>
+
+      <div style="font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px;">Pilih Rumah untuk
+        Disimulasikan:</div>
+      <div id="qrScannerHousesList"
+        style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; margin-bottom: 1.5rem;">
+        <!-- Houses list will be rendered dynamically -->
+      </div>
+
+      <button class="btn btn-ghost" onclick="closeQrScanner()" style="width: 100%;">Tutup</button>
+    </div>
+  </div>
+
+  <!-- DEDICATED RECORDING MODAL -->
+  <div class="modal-overlay" id="recordingModal">
+    <div class="modal-content" style="max-width: 440px; text-align: left; border-radius: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3
+          style="font-size: 20px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-cash" style="color: var(--primary); font-size: 24px;"></i> Catat Jimpitan
+        </h3>
+        <button onclick="closeRecordingModal()"
+          style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3);"><i
+            class="ti ti-x"></i></button>
+      </div>
+
+      <div
+        style="background: var(--bg); padding: 16px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 1.5rem;">
+        <div
+          style="font-size: 11px; color: var(--text3); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
+          Detail Rumah</div>
+        <div id="recHouseName" style="font-size: 18px; font-weight: 800; color: var(--text); margin-top: 4px;">Blok A1
+        </div>
+        <div id="recHouseOwner" style="font-size: 14px; color: var(--text2); font-weight: 600; margin-top: 2px;">Budi
+          Santoso</div>
+        <div id="recAmount" style="font-size: 16px; color: var(--primary); font-weight: 800; margin-top: 8px;">Rp 5.000
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label"><i class="ti ti-calendar" style="color: var(--primary);"></i> Hari Piket</label>
+        <select id="recHariSelect" class="form-input" style="width: 100%; font-weight: 600;"
+          onchange="updateRecordingPetugasSelect()">
+          <option value="Senin">Senin</option>
+          <option value="Selasa">Selasa</option>
+          <option value="Rabu">Rabu</option>
+          <option value="Kamis">Kamis</option>
+          <option value="Jumat">Jumat</option>
+          <option value="Sabtu">Sabtu</option>
+          <option value="Minggu">Minggu</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label"><i class="ti ti-user-check" style="color: var(--primary);"></i> Petugas Piket
+          (Pengambil)</label>
+        <select id="recPetugasSelect" class="form-input" style="width: 100%; font-weight: 600;"></select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label"><i class="ti ti-wallet" style="color: var(--warning);"></i> Metode Pembayaran</label>
+        <select id="recMetodeSelect" class="form-input" style="width: 100%; font-weight: 800; cursor: pointer;">
+          <option value="Tunai">💵 Uang Tunai (Cash)</option>
+          <option value="QR Code">📱 QR Code / Digital</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label"><i class="ti ti-device-laptop" style="color: var(--secondary);"></i> Pencatat (Akun /
+          Scanner)</label>
+        <input type="text" id="recPencatatInput" class="form-input"
+          style="width: 100%; font-weight: 600; background: var(--bg); color: var(--text2); cursor: not-allowed;"
+          readonly />
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-ghost" onclick="closeRecordingModal()" style="flex: 1;">Batal</button>
+        <button class="btn btn-primary" onclick="confirmRecording()" style="flex: 1;"><i
+            class="ti ti-device-floppy"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WARGA SETORAN SUBMISSION MODAL -->
+  <div class="modal-overlay" id="wargaSetoranModal">
+    <div class="modal-content" style="max-width: 420px; text-align: left; border-radius: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3
+          style="font-size: 20px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-send" style="color: var(--primary); font-size: 24px;"></i> Kirim Laporan Setoran
+        </h3>
+        <button onclick="closeWargaSetoranModal()"
+          style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3);"><i
+            class="ti ti-x"></i></button>
+      </div>
+
+      <div
+        style="background: var(--bg); padding: 16px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 1.5rem;">
+        <div
+          style="font-size: 11px; color: var(--text3); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
+          Ringkasan Laporan</div>
+        <div id="wargaSetoranCount" style="font-size: 16px; font-weight: 800; color: var(--text); margin-top: 4px;">0
+          Rumah Ditandai</div>
+        <div id="wargaSetoranAmount" style="font-size: 18px; color: var(--primary); font-weight: 800; margin-top: 4px;">
+          Total Setoran: Rp 0</div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label"><i class="ti ti-calendar" style="color: var(--primary);"></i> Hari Piket
+          Keliling</label>
+        <select id="wargaSetoranHariSelect" class="form-input" style="width: 100%; font-weight: 600;"
+          onchange="updateWargaSetoranPetugasSelect()">
+          <option value="Senin">Senin</option>
+          <option value="Selasa">Selasa</option>
+          <option value="Rabu">Rabu</option>
+          <option value="Kamis">Kamis</option>
+          <option value="Jumat">Jumat</option>
+          <option value="Sabtu">Sabtu</option>
+          <option value="Minggu">Minggu</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label"><i class="ti ti-user-check" style="color: var(--primary);"></i> Petugas Piket
+          (Pengambil)</label>
+        <select id="wargaSetoranPetugasSelect" class="form-input" style="width: 100%; font-weight: 600;"></select>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-ghost" onclick="closeWargaSetoranModal()" style="flex: 1;">Batal</button>
+        <button class="btn btn-primary" onclick="confirmWargaSetoran()" style="flex: 1;"><i class="ti ti-send"></i>
+          Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAMBAH WARGA MODAL -->
+  <div class="modal-overlay" id="tambahWargaModal">
+    <div class="modal-content" style="max-width: 440px; text-align: left; border-radius: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 20px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-user-plus" style="color: var(--primary); font-size: 24px;"></i> Tambah Warga Baru
+        </h3>
+        <button onclick="closeTambahWargaModal()"
+          style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3);"><i
+            class="ti ti-x"></i></button>
+      </div>
+
+      <form onsubmit="handleTambahWarga(event)">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label"><i class="ti ti-map-pin" style="color: var(--primary);"></i> Blok / Nomor Rumah</label>
+          <input type="text" id="addHouseBlok" class="form-input" style="width: 100%; font-weight: 600;" placeholder="Contoh: Blok G1" required />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label"><i class="ti ti-user" style="color: var(--primary);"></i> Nama Pemilik Rumah</label>
+          <input type="text" id="addHouseOwner" class="form-input" style="width: 100%; font-weight: 600;" placeholder="Contoh: Eko Prasetyo" required />
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <button type="button" class="btn btn-ghost" onclick="closeTambahWargaModal()" style="flex: 1;">Batal</button>
+          <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="ti ti-device-floppy"></i> Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    @keyframes scanLine {
+      0% {
+        top: 0%;
+      }
+
+      50% {
+        top: 100%;
+      }
+
+      100% {
+        top: 0%;
+      }
+    }
+
+    .animate-spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <!-- PREMIUM DIGITAL RECEIPT (KWITANSI) MODAL -->
+  <div class="modal-overlay" id="receiptModal" style="z-index: 1000;">
+    <div class="modal-content" style="max-width: 500px; padding: 2rem; border-radius: 28px; text-align: left; position: relative;">
+      <!-- Close Button -->
+      <button onclick="closeReceiptModal()" style="position: absolute; right: 1.5rem; top: 1.5rem; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3);"><i class="ti ti-x"></i></button>
+
+      <!-- Printable Area -->
+      <div id="receiptPrintArea" style="background: #fff; padding: 1.5rem; border: 2px double #000; border-radius: 16px; font-family: 'Courier New', Courier, monospace; color: #000; box-shadow: var(--shadow-sm);">
+        <!-- Receipt Header / Kop Surat -->
+        <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
+          <div style="font-size: 16px; font-weight: 800; text-transform: uppercase;">Kwitansi Jimpitan RT</div>
+          <div style="font-size: 11px; font-weight: 700; color: #4a5568;">RUKUN TETANGGA 03 / RW 04 KAMPUNG PREMIUM</div>
+          <div style="font-size: 9px; color: #718096; margin-top: 2px;">Sistem Iuran Terpadu Digital</div>
+        </div>
+
+        <!-- Receipt Metadata -->
+        <table style="width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 15px;">
+          <tr>
+            <td style="width: 35%; font-weight: 700; padding: 4px 0;">No. Ref</td>
+            <td style="width: 5%;">:</td>
+            <td id="receiptRef" style="font-weight: 800; color: var(--primary);">#TX-20260526-001</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">Telah Diterima Dari</td>
+            <td>:</td>
+            <td id="receiptOwner" style="font-weight: 800; text-transform: uppercase;">BUDI SANTOSO</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">No. Rumah / Blok</td>
+            <td>:</td>
+            <td id="receiptHouse" style="font-weight: 800;">BLOK A1</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">Untuk Pembayaran</td>
+            <td>:</td>
+            <td style="font-weight: 700;">Iuran Jimpitan Wajib Bulanan</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">Metode Bayar</td>
+            <td>:</td>
+            <td id="receiptMethod" style="font-weight: 800;">💵 UANG TUNAI</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">Waktu Transaksi</td>
+            <td>:</td>
+            <td id="receiptTime" style="font-weight: 700;">26/05/2026, 10:24:30</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; padding: 4px 0;">Petugas Piket</td>
+            <td>:</td>
+            <td id="receiptPetugas" style="font-weight: 800;">-</td>
+          </tr>
+        </table>
+
+        <!-- Nominal Box -->
+        <div style="background: #f7fafc; border: 1px dashed #000; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #4a5568;">Jumlah Pembayaran</div>
+          <div id="receiptAmount" style="font-size: 24px; font-weight: 900; color: var(--primary); margin-top: 4px;">Rp 5.000</div>
+          <div id="receiptTerbilang" style="font-size: 10px; font-style: italic; color: #718096; margin-top: 2px;">"Lima Ribu Rupiah"</div>
+        </div>
+
+        <!-- Footer Stamp / Signatures -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; font-size: 11px; margin-top: 1.5rem;">
+          <div style="text-align: center; width: 40%; font-family: sans-serif;">
+            <div style="font-size: 9px; color: #a0aec0;">Status Kwitansi</div>
+            <div style="font-weight: 800; color: var(--success); border: 2px solid var(--success); padding: 4px 8px; border-radius: 6px; transform: rotate(-5deg); display: inline-block; margin-top: 4px; text-transform: uppercase;">LUNAS VERIFIED</div>
+          </div>
+          <div style="text-align: center; width: 45%;">
+            <div id="receiptSignatureDate" style="font-size: 9px; margin-bottom: 30px;">Kampung Premium, 26 Mei 2026</div>
+            <div style="border-top: 1px solid #000; padding-top: 4px; font-weight: 700;" id="receiptPencatat">Bendahara RT</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+        <button class="btn btn-ghost" onclick="closeReceiptModal()" style="flex: 1;">Tutup</button>
+        <button class="btn btn-primary" onclick="printReceipt()" style="flex: 1;"><i class="ti ti-printer"></i> Cetak / Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST COMPONENT -->
+  <div class="toast" id="toastEl"></div>
+
+  <!-- FLOATING VOICE ASSISTANT -->
+  <div class="floating-voice-assistant" id="voiceAssistantBtn" onclick="toggleVoiceAssistant()"
+    title="Tanya Asisten Suara">
+    <i class="ti ti-microphone"></i>
+  </div>
+
+  <!-- SPEECH STATUS PANEL -->
+  <div class="speech-status-panel" id="speechStatusPanel">
+    <div
+      style="font-size: 11px; text-transform: uppercase; color: var(--secondary); letter-spacing: 0.08em; font-weight: 800;">
+      Asisten Suara Jimpitan</div>
+    <div id="speechStatusText" style="font-size: 14px; font-weight: 700; color: #fff;">Klik mic untuk berbicara...</div>
+    <div class="speech-wave" id="speechWaveEl" style="display: none;">
+      <div class="speech-bar"></div>
+      <div class="speech-bar"></div>
+      <div class="speech-bar"></div>
+      <div class="speech-bar"></div>
+      <div class="speech-bar"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/receipt.js"></script>
+  <script src="assets/js/voice.js"></script>
+  <script src="assets/js/ronda.js"></script>
+  <script src="assets/js/payment.js"></script>
+  <script src="assets/js/ui.js"></script>
 </body>
-</html>
 
+</html>
